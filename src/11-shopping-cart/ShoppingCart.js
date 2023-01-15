@@ -12,7 +12,35 @@ const items = [{
 }]
 
 function ShoppingCart () {
-  const cart = [{ name: 'apple', quantity: 3, price: 0.39 }]
+  const [cart, setCart] = useState([])
+
+  const addToCard = (item) => {
+    const cartCopy = [...cart]
+    const itemInCart = cartCopy.find(i => item.name === i.name)
+    if (itemInCart) {
+      setCart(cartCopy)
+    } else {
+      setCart(prevCart => [...prevCart, {...item, quantity: 1}])
+    }
+  }
+
+  const increase = (name) => {
+    const cartCopy = [...cart]
+    const itemInCart = cartCopy.find(i => name === i.name)
+    itemInCart.quantity++
+    setCart(cartCopy)
+  }
+
+  const decrease = (name) => {
+    let cartCopy = [...cart]
+    const item = cartCopy.find(i => name === i.name)
+    if (item.quantity > 1) {
+      item.quantity--
+    } else {
+      cartCopy = cartCopy.filter(i => i.name !== name)
+    }
+    setCart(cartCopy)
+  }
 
   return (
     <div>
@@ -24,7 +52,7 @@ function ShoppingCart () {
             <div key={item.name}>
               <h3>{item.name}</h3>
               <p>${item.price}</p>
-              <button>Add to Cart</button>
+              <button onClick={() => addToCard(item)}>Add to Cart</button>
             </div>)
           )}
         </div>
@@ -34,17 +62,17 @@ function ShoppingCart () {
             <div key={item.name}>
               <h3>{item.name}</h3>
               <p>
-                <button>-</button>
+                <button onClick={() => decrease(item.name)}>-</button>
                 {item.quantity}
-                <button>+</button>
+                <button onClick={() => increase(item.name)}>+</button>
               </p>
-              <p>Subtotal: ${item.quantity * item.price}</p>
+              <p>Subtotal: ${(item.quantity * item.price).toFixed(2)}</p>
             </div>
           ))}
         </div>
       </div>
       <div className='total'>
-        <h2>Total: $0.00</h2>
+        <h2>Total: {cart.reduce((acc, i) => acc + (i.quantity + i.price), 0).toFixed(2)}</h2>
       </div>
     </div>
   )

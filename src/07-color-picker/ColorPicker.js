@@ -25,7 +25,9 @@ export default function ColorPicker () {
     <div className='page' style={{ backgroundColor }}>
       {
         colors.map(color => (
-          <Color key={color.hex} hex={color.hex} name={color.name} />
+          <Color key={color.hex} hex={color.hex} name={color.name} setBackgroundColor={setBackgroundColor} 
+          /* Sending the state from this component through props with the belonging color and name  */
+          />
         ))
       }
     </div>
